@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule } from '@angular/router';
 
@@ -32,6 +33,8 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([])
   ],
   providers: [ShoppingListService],

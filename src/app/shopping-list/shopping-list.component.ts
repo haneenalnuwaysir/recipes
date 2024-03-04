@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Ingradient } from '../shared/ingradient.model';
+import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
 import { Subscription } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class ShoppingListComponent implements OnInit , OnDestroy{
   
-  ingradients! : Ingradient[] ;
+  ingradients! : Ingredient[] ;
   private igChangeSubscription!: Subscription;
 
   constructor(private shoppingListService: ShoppingListService ){}
@@ -24,9 +24,12 @@ export class ShoppingListComponent implements OnInit , OnDestroy{
     this.ingradients = this.shoppingListService.getIngredients();
     this.igChangeSubscription = this.shoppingListService.ingradientsChanged
     .subscribe(
-      (ingradients: Ingradient[] ) => {
+      (ingradients: Ingredient[] ) => {
         this.ingradients = ingradients;
       }
     )
+  }
+  onEditItem(index: number){
+    this.shoppingListService.startedEditing.next(index);
   }
 }

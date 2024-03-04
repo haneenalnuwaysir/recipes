@@ -1,6 +1,6 @@
 import {  Injectable } from '@angular/core';
 import { Recipe } from './recipe.model';
-import { Ingradient } from '../shared/ingradient.model';
+import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Subject } from 'rxjs';
 
@@ -8,37 +8,55 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class RecipeService {
-  recipeSelected = new Subject<Recipe>();
-
-  constructor(private shoppingListService: ShoppingListService) { }
+  recipeChanged = new Subject<Recipe[]>();
 
   private recipes: Recipe[] = [
-    new Recipe('recipe one',
-    'the description of recipe one',
-    'https://kellyloves.com/cdn/shop/articles/Untitled_2048_x_1024px_2048_x_1024px_1024_x_1024px.jpg?v=1652972260&width=800',
-     [
-       new Ingradient('meet', 1),
-       new Ingradient('cheese', 2),
+
+    new Recipe('Big Fat Burger',
+      'Any description you want ...',
+      'assets/burger.jpeg',
+      [
+        new Ingredient('Buns', 2),
+        new Ingredient('Meat', 1)
       ]),
-      new Recipe('recipe Three',
-      'the description of recipe three',
-      'https://www.tamingtwins.com/wp-content/uploads/2023/02/image-56-500x500.jpeg',
-       [
-        new Ingradient('rice', 5),
-        new Ingradient('meet', 1),
-       ])
+
+    new Recipe(
+      'Tasty Schnitzel',
+      'A super-tasty Schnitzel - just awesome!',
+      'assets/schnitzel.jpg',
+      [
+        new Ingredient('Meat', 1),
+        new Ingredient('Frensh Fries', 20)
+      ])
   ];
 
-  getRecipes(){
-    return this.recipes;
-  }
-  addIngredientsToShoppingList(ingredients: Ingradient[]){
-      this.shoppingListService.addIngredientsFromRecipe(ingredients);
+  constructor(private slService: ShoppingListService) { }
+
+  getRecipes() {
+    return this.recipes.slice();
   }
 
-  // method to get by id
   getRecipe(index: number){
     return this.recipes[index];
+  }
+
+  addIngredientsToShoppingList(ingredients: Ingredient[]) {
+    this.slService.addIngredientsFromRecipe(ingredients);
+  }
+
+  addRecipe(recipe: Recipe){
+    this.recipes.push(recipe);
+    this.recipeChanged.next(this.recipes.slice());
+  }
+
+  updateRecipe(index: number, recipe: Recipe){
+    this.recipes[index] = recipe;
+    this.recipeChanged.next(this.recipes.slice());
+  }
+
+  deleteRecipe(index: number){
+    this.recipes.splice(index,1);
+    this.recipeChanged.next(this.recipes.slice());
   }
 
 }
