@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Ingredient } from '../shared/ingredient.model';
+import {Ingredient} from '../shared/ingredient.model'
 import { ShoppingListService } from './shopping-list.service';
 import { Subscription } from 'rxjs';
 
@@ -8,28 +8,31 @@ import { Subscription } from 'rxjs';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css']
 })
-export class ShoppingListComponent implements OnInit , OnDestroy{
+export class ShoppingListComponent implements OnInit, OnDestroy {
   
-  ingradients! : Ingredient[] ;
-  private igChangeSubscription!: Subscription;
+  ingredients!: Ingredient[];
+  private igChangeSub!: Subscription;
 
-  constructor(private shoppingListService: ShoppingListService ){}
-
-  ngOnDestroy(): void {
-    // throw new Error('Method not implemented.');
-    this.igChangeSubscription.unsubscribe();
-  }
+  constructor(private slService: ShoppingListService) { }
 
   ngOnInit(): void {
-    this.ingradients = this.shoppingListService.getIngredients();
-    this.igChangeSubscription = this.shoppingListService.ingradientsChanged
+    this.ingredients = this.slService.getIngredients();
+
+    this.igChangeSub =  this.slService.ingredientsChanged
     .subscribe(
-      (ingradients: Ingredient[] ) => {
-        this.ingradients = ingradients;
+      (ingredients: Ingredient[])=>{
+        this.ingredients = ingredients;
       }
-    )
+    );
+    
   }
+
   onEditItem(index: number){
-    this.shoppingListService.startedEditing.next(index);
+    this.slService.startedEditing.next(index);
   }
+
+  ngOnDestroy(): void {
+    this.igChangeSub.unsubscribe();
+  }
+
 }

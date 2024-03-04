@@ -9,8 +9,7 @@ import { Recipe } from '../recipe.model';
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css']
 })
-export class RecipeEditComponent implements OnInit{ 
-
+export class RecipeEditComponent implements OnInit {
   id !: number;
   editMode = false;
   recipeForm!: FormGroup;

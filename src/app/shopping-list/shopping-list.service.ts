@@ -1,49 +1,45 @@
-import {  Injectable } from '@angular/core';
-import { Ingredient } from '../shared/ingredient.model';
-import { Subject } from 'rxjs';
+import { Subject } from "rxjs";
+import { Ingredient } from "../shared/ingredient.model";
 
+export class ShoppingListService{
+    ingredientsChanged = new Subject<Ingredient[]>();
+    startedEditing = new Subject<number>();
+    
+    private ingredients: Ingredient[] = [
+        new Ingredient('Apples',5),
+        new Ingredient('Tomatoes', 10)
+      ];
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ShoppingListService {
-  ingradientsChanged = new Subject<Ingredient[]>();
-  startedEditing = new Subject<number>();
-  constructor() { }
+    getIngredients(){
+        return this.ingredients.slice();
+    }
 
-  private ingradients : Ingredient[] =[
-    new Ingredient('Apple', 5),
-    new Ingredient('banana', 3),
-  ];
+    getIngrdient(index: number){
+        return this.ingredients[index];
+    }
 
-  getIngredients(){
-    return this.ingradients.slice();
-  }
-// updated on time
-  addIngredients(ingradient: Ingredient){
-   this.ingradients.push(ingradient);
-   this.ingradientsChanged.next(this.ingradients.slice());
-  }
-  addIngredientsFromRecipe(ingredients :Ingredient[]){
-    // for( let ingradient of ingredients){
-    //   this.addIngredients(ingradient)
-    // }
-    // ... use when you want to push array inside an array
-    this.ingradients.push(...ingredients);
-    this.ingradientsChanged.next(this.ingradients.slice());
+    addIngredients(ingredient: Ingredient){
+        this.ingredients.push(ingredient);
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
 
-  }
+    updateIngredient(index: number, newIngredient: Ingredient)
+    {
+        this.ingredients[index] = newIngredient;
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
 
-  getIngredient(index: number){
-    return this.ingradients[index]
-  }
-  updateIngradient(index: number,newIngradient: Ingredient){
-    this.ingradients[index]= newIngradient;
-    this.ingradientsChanged.next(this.ingradients.slice());
-  }
-  deleteIngradient(index: number){
-    this.ingradients.splice(index, 1);
-    this.ingradientsChanged.next(this.ingradients.slice());
-  }
+    addIngredientsFromRecipe(ingredients: Ingredient[]){
+        // for (let ingredient of ingredients){
+        //     this.addIngredients(ingredient);
+        // }
+        this.ingredients.push(...ingredients);
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
+
+    deleteIngredent(index: number)
+    {
+        this.ingredients.splice(index, 1);
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
 }
-// Subject -> next
